@@ -1,17 +1,37 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   // let signinError;
   // const navigate = useNavigate();
   // const location = useLocation();
-  const { register, formState: { errors }, handleSubmit } = useForm();
+  const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
   // let from = location.state?.from?.pathname || "/";
 
   const onSubmit = async data => {
     console.log(data)
+    fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(result => {
+        if (result.status === 200) {
+          toast.success("Login Successful");
+          reset();
+        }
+        else {
+          toast.error("Email or password not matching");
+          reset();
+        }
+
+      })
   }
   return (
     <>
