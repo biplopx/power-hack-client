@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from "react-router-dom";
+import Loading from '../Loading/Loading';
 import AddBilling from './AddBilling';
 import SingleBilling from './SingleBilling';
+
+
 const Billings = () => {
-  // const [openModal, setModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
+  let location = useLocation();
   const [pagerState, setPagerState] = useState({
     pager: {},
     pageOfItems: []
   })
-  const { page } = useParams();
+  const params = new URLSearchParams(location.search);
+  const page = parseInt(params.get('page')) || 1;
 
   const fetchData = () => {
     setIsLoading(true)
-    const pageNumber = parseInt(page) || 1;
-    console.log(pageNumber)
-    if (pageNumber !== pagerState.pager.currentPage) {
-      fetch(`http://localhost:5000/api/billing-list?page=${pageNumber}`, { method: 'GET' })
+    if (page !== pagerState.pager.currentPage) {
+      fetch(`http://localhost:5000/api/billing-list?page=${page}`, { method: 'GET' })
         .then(response => response.json())
         .then(({ pager, pageOfItems }) => {
           setPagerState({ pager, pageOfItems });
@@ -26,22 +28,10 @@ const Billings = () => {
   }
 
   useEffect(() => {
-    // fetchData();
-    console.log("Useeffect")
-  }, [])
+    fetchData();
+  }, [page])
 
 
-
-  // if (isLoading) {
-  //   return (
-  //     <div>
-  //       Loading.........
-  //     </div>
-  //   )
-
-  // } else {
-  const { pager, pageOfItems } = pagerState;
-  console.log(pagerState)
   return (
     <>
       <section className='py-12'>
@@ -52,7 +42,7 @@ const Billings = () => {
                 <h3>Billing</h3>
               </div>
               <div className="flex-none">
-                <label for="addBilling-Modal" class="btn btn-primary text-white btn-sm">Add New Bill</label>
+                <label htmlFor="addBilling-Modal" className="btn btn-primary text-white btn-sm">Add New Bill</label>
               </div>
             </div>
             {/* Billing Table */}
@@ -70,10 +60,11 @@ const Billings = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {
-                      pageOfItems.map(billing => <SingleBilling billing={billing}></SingleBilling>)
-                    }
 
+                    {
+                      isLoading ? <Loading /> :
+                        pagerState.pageOfItems.map(billing => <SingleBilling key={billing._id} billing={billing}></SingleBilling>)
+                    }
                   </tbody>
                   <tfoot>
                     <tr>
@@ -88,11 +79,11 @@ const Billings = () => {
                 </table>
               </div>
               <div className="btn-group mt-5">
-                {pager?.pages.map(page =>
-                  <div key={page} className={`btn btn-sm ${pager.currentPage === page ? 'btn-active' : ''}`}>
-                    <Link to={{ search: `?page=${page}` }} className="page-link">{page}</Link>
-                  </div>
-                )
+                {
+                  pagerState.pager?.pages?.map(page =>
+                  (
+                    <Link to={{ search: `?page=${page}` }} key={page} className={`btn btn-sm ${pagerState.pager?.currentPage === page ? 'btn-active' : ''}`}>{page}</Link>
+                  ))
                 }
               </div>
             </div>
@@ -101,10 +92,7 @@ const Billings = () => {
       </section>
       <AddBilling></AddBilling>
     </>
+  )
+}
 
-  );
-
-
-};
-
-export default Billings;
+export default Billings

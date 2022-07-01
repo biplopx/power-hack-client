@@ -14,10 +14,10 @@ const AddBilling = () => {
 
   return (
     <>
-      <input type="checkbox" id="addBilling-Modal" class="modal-toggle" />
-      <div class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box">
-          <h3 class="font-bold text-lg">Add New Bill</h3>
+      <input type="checkbox" id="addBilling-Modal" className="modal-toggle" />
+      <div className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Add New Bill</h3>
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* Ful name Input */}
@@ -102,8 +102,8 @@ const AddBilling = () => {
               <input className='btn btn-primary w-full text-white' type="submit" value="Add New Bill" />
             </form>
           </div>
-          <div class="modal-action">
-            <label for="addBilling-Modal" class="btn btn-primary text-white btn-sm">Close</label>
+          <div className="modal-action">
+            <label for="addBilling-Modal" className="btn btn-primary text-white btn-sm">Close</label>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useJwt } from 'react-jwt';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -7,6 +8,7 @@ const Login = () => {
   // let signinError;
   // const navigate = useNavigate();
   // const location = useLocation();
+  const [user, setUser] = useState();
   const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
   // let from = location.state?.from?.pathname || "/";
@@ -22,7 +24,10 @@ const Login = () => {
     })
       .then(res => res.json())
       .then(result => {
+        console.log(result)
         if (result.status === 200) {
+          setUser(result)
+          localStorage.setItem('accessToken', `bearer ${result.token}`);
           toast.success("Login Successful");
           reset();
         }
@@ -30,7 +35,9 @@ const Login = () => {
           toast.error("Email or password not matching");
           reset();
         }
-
+      })
+      .catch(err => {
+        // console.log(err)
       })
   }
   return (
