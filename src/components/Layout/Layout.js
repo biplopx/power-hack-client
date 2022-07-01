@@ -1,10 +1,10 @@
-import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import Header from '../Header/Header';
 
-const Layout = ({ children }) => {
+const Layout = ({ isBilling, children }) => {
   return (
     <>
-      <Header />
+      <Header isBilling={isBilling} />
       {children}
       <Footer />
     </>

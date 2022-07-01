@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useStore from "../../store/store";
 
-const Header = () => {
+const Header = ({isBilling}) => {
+  const totalPaidAmount = useStore((state) => state.totalPaidAmount);
   return (
     <header className='bg-green-200'>
       <div className="container mx-auto px-10">
@@ -10,7 +12,9 @@ const Header = () => {
             <Link to="/" className="btn btn-ghost normal-case text-xl">Power-Hack</Link>
           </div>
           <div className="flex-none">
-            <button className="btn btn-primary text-white"><Link to="/login">Login</Link></button>
+            {
+              isBilling ? <p className="text-black font-bold">Paid Total: {totalPaidAmount}</p> : <button className="btn btn-primary text-white"><Link to="/login">Login</Link></button>
+            }
           </div>
         </div>
       </div>

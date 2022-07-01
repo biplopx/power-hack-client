@@ -26,7 +26,7 @@ const Registration = () => {
   // hanle user registration
   const onSubmit = async data => {
     console.log(data)
-    fetch('http://localhost:5000/api/registration', {
+    fetch('https://boxing-mountie-80750.herokuapp.com/api/registration', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'

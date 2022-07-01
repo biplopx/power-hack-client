@@ -1,113 +1,46 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
+import { toast } from "react-toastify";
+import AddUpdateForm from './AddUpdateForm';
 
-const AddBilling = () => {
+const AddBilling = ({ pagerState, setPagerState, setFetchAgain }) => {
   const { register, formState: { errors }, handleSubmit, reset } = useForm({
     mode: 'onChange',
-    reValidateMode: 'onChange',
+    reValidateMode: 'onChange'
   });
 
-  const onSubmit = async data => {
-    console.log(data)
+  const addData = async (data) => {
+    const newBilling = {
+      email: data.email,
+      fullName: data.fullName,
+      paidAmount: parseInt(data.paidAmount),
+      phone: data.phone
+    }
+    const oldPageOfItems = pagerState?.pageOfItems
+    oldPageOfItems.unshift(newBilling)
+    setPagerState({ ...pagerState, pageOfItems: oldPageOfItems })
+    fetch('https://boxing-mountie-80750.herokuapp.com/api/add-billing', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': localStorage.getItem('accessToken')
+      },
+      body: JSON.stringify(newBilling)
+    })
+      .then(res => res.json())
+      .then(result => {
+        setFetchAgain(true)
+        toast.success('Product successfully added')
+        reset()
+      })
+      .catch(err => {
+        oldPageOfItems.shift(newBilling)
+        setPagerState({ ...pagerState, pageOfItems: oldPageOfItems })
+      })
   }
 
   return (
-    <>
-      <input type="checkbox" id="addBilling-Modal" className="modal-toggle" />
-      <div className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Add New Bill</h3>
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {/* Ful name Input */}
-              <div className="form-control w-full">
-                <label className="label font-semibold">
-                  <span className="label-text">Full Name</span>
-                </label>
-                <input
-                  type="text"
-                  {...register("fullName", {
-                    required: {
-                      value: true,
-                      message: 'Please enter your full name'
-                    }
-                  })}
-                  placeholder="Your name" className="input input-bordered w-full" />
-                <label className="label">
-                  {errors.fullName?.type === 'required' && <span className="label-text-alt text-red-500">{errors.fullName.message}</span>}
-                </label>
-              </div>
-              {/* Email Input */}
-              <div className="form-control w-full ">
-                <label className="label font-semibold">
-                  <span className="label-text">Email</span>
-                </label>
-                <input type="email"
-                  {...register("email", {
-                    required: {
-                      value: true,
-                      message: 'Please enter your email'
-                    },
-                    pattern: {
-                      value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-                      message: 'Provide a valid an Email'
-                    }
-                  })}
-                  placeholder="Your email" className="input input-bordered w-full" />
-                <label className="label">
-                  {errors.email?.type === 'required' && <span className="label-text-alt text-red-500">{errors.email.message}</span>}
-                  {errors.email?.type === 'pattern' && <span className="label-text-alt text-red-500">{errors.email.message}</span>}
-                </label>
-              </div>
-              {/* Phone Input */}
-              <div className="form-control w-full">
-                <label className="label font-semibold">
-                  <span className="label-text">Phone</span>
-                </label>
-                <input type="phone"
-                  {...register("phone", {
-                    required: {
-                      value: true,
-                      message: 'Please enter mobile number'
-                    },
-                    minLength: {
-                      value: 11,
-                      message: 'Phone number should be 11 digit'
-                    }
-                  })}
-                  placeholder="Your password" className="input input-bordered w-full" />
-                <label className="label">
-                  {errors.phone?.type === 'required' && <span className="label-text-alt text-red-500">{errors.phone.message}</span>}
-                  {errors.phone?.type === 'minLength' && <span className="label-text-alt text-red-500">{errors.phone.message}</span>}
-                </label>
-              </div>
-              {/* Paid Amount Input */}
-              <div className="form-control w-full">
-                <label className="label font-semibold">
-                  <span className="label-text">Paid Amount</span>
-                </label>
-                <input type="number"
-                  {...register("paidAmount", {
-                    required: {
-                      value: true,
-                      message: 'Please enter mobile number'
-                    }
-                  })}
-                  placeholder="Your password" className="input input-bordered w-full" />
-                <label className="label">
-                  {errors.paidAmount?.type === 'required' && <span className="label-text-alt text-red-500">{errors.paidAmount.message}</span>}
-                </label>
-              </div>
-              <input className='btn btn-primary w-full text-white' type="submit" value="Add New Bill" />
-            </form>
-          </div>
-          <div className="modal-action">
-            <label for="addBilling-Modal" className="btn btn-primary text-white btn-sm">Close</label>
-          </div>
-        </div>
-      </div>
-    </>
+    <AddUpdateForm addData={addData} register={register} errors={errors} handleSubmit={handleSubmit} reset={reset} />
   );
 };
 

@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useJwt } from 'react-jwt';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import useStore from "../../store/store";
 
 const Login = () => {
   // let signinError;
-  // const navigate = useNavigate();
-  // const location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const setIsLoggedIn = useStore((state) => state.setIsLoggedIn);
   const [user, setUser] = useState();
   const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
-  // let from = location.state?.from?.pathname || "/";
+  let from = location.state?.from?.pathname || "/";
 
   const onSubmit = async data => {
     console.log(data)
-    fetch('http://localhost:5000/api/login', {
+    fetch('https://boxing-mountie-80750.herokuapp.com/api/login', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -27,9 +28,11 @@ const Login = () => {
         console.log(result)
         if (result.status === 200) {
           setUser(result)
-          localStorage.setItem('accessToken', `bearer ${result.token}`);
+          localStorage.setItem('accessToken', `Bearer ${result.token}`);
+          setIsLoggedIn(true)
           toast.success("Login Successful");
           reset();
+          navigate(from, { replace: true });
         }
         else {
           toast.error("Email or password not matching");
