@@ -3,7 +3,7 @@ import React from 'react';
 const AddUpdateForm = ({ addData, register, errors, handleSubmit, modalType }) => {
 
     const onSubmit = async (data) => {
-        console.log(data)
+        // console.log(data)
         addData(data)
     }
 
@@ -94,7 +94,7 @@ const AddUpdateForm = ({ addData, register, errors, handleSubmit, modalType }) =
                                     {errors.paidAmount?.type === 'required' && <span className="label-text-alt text-red-500">{errors.paidAmount.message}</span>}
                                 </label>
                             </div>
-                            <input className='btn btn-primary w-full text-white' type="submit" value="Add New Bill" />
+                            <input className='btn btn-primary w-full text-white' type="submit" value="Add or Update Bill" />
                         </form>
                     </div>
                     <div className="modal-action">

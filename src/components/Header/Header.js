@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import useStore from "../../store/store";
 
-const Header = ({isBilling}) => {
+const Header = ({ isBilling }) => {
+  const isLoggedIn = useStore((state) => state.isLoggedIn);
   const totalPaidAmount = useStore((state) => state.totalPaidAmount);
   return (
     <header className='bg-green-200'>
@@ -13,7 +14,10 @@ const Header = ({isBilling}) => {
           </div>
           <div className="flex-none">
             {
-              isBilling ? <p className="text-black font-bold">Paid Total: {totalPaidAmount}</p> : <button className="btn btn-primary text-white"><Link to="/login">Login</Link></button>
+              isBilling ? <p className="text-black font-bold">Paid Total: {totalPaidAmount}</p>
+                :
+                isLoggedIn ? <></> :
+                  <button className="btn btn-primary text-white"><Link to="/login">Login</Link></button>
             }
           </div>
         </div>

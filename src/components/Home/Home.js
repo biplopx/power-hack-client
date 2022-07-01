@@ -11,13 +11,13 @@ const Home = () => {
           isLoggedIn ? (
             <div className="max-w-md">
               <h1 className="text-5xl font-bold">Welcome To Power-Hack</h1>
-              <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+              <p className="py-6">Now You can manage billings.</p>
               <button className="btn btn-primary text-white"><Link to="/billings">Got to Billings</Link></button>
             </div>
           ) : (
             <div className="max-w-md">
               <h1 className="text-5xl font-bold">Please Login First</h1>
-              <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+              <p className="py-6">To manage billing you need to login first.</p>
               <button className="btn btn-primary text-white"><Link to="/login">Login</Link></button>
             </div>
           )
